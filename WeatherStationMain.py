@@ -33,7 +33,7 @@ Grid.columnconfigure(root,1,weight=1)
 Grid.columnconfigure(root,3,weight=2)
 Grid.rowconfigure(root,0,weight=10)
 Grid.rowconfigure(root,1,weight=1)
-Grid.rowconfigure(root,2,weight=25)
+Grid.rowconfigure(root,2,weight=5)
 Grid.rowconfigure(root,3,weight=1)
 Grid.rowconfigure(root,4,weight=1)
 Grid.rowconfigure(root,5,weight=1)
@@ -43,26 +43,32 @@ logger.info("Specifying Grid...")
 # Create Buttons
 startButton = customtkinter.CTkButton(root,text="Start Data Collection", fg_color='green',
 	command = lambda: guiHandler.startDataCollection(), text_color="black",
-	font=("Calibria", 15))
+	font=("Inter", 15))
 endButton = customtkinter.CTkButton(root,text="End Data Collection", fg_color='yellow',
 	command = lambda: guiHandler.endDataCollection(), text_color="black",
-	font=("Calibria", 15))
+	font=("Inter", 15))
 exitButton = customtkinter.CTkButton(root,text="Exit", fg_color='red',
 	command = lambda: guiHandler.shutdown(), text_color="black",
-	font=("Calibria", 15))
+	font=("Inter", 15))
 groundStationButton = customtkinter.CTkButton(root,text="Start Rotation",
 	fg_color='orange', command = lambda: guiHandler.toggleGroundStationRotation(),
-	text_color="black", font=("Calibria", 15))
+	text_color="black", font=("Inter", 15))
 
 logger.info("Creating Buttons...")
 
 # Create Labels
-temperatureLabel = customtkinter.CTkLabel(root, text="Temperature: ", font=("Calibria", 15))
-humidityLabel = customtkinter.CTkLabel(root, text="Humidity: ", font=("Calibria", 15))
-pressureLabel = customtkinter.CTkLabel(root, text="Pressure: ", font=("Calibria", 15))
-uvLabel = customtkinter.CTkLabel(root, text="UV: ", font=("Calibria", 15))
-windDirectionLabel = customtkinter.CTkLabel(root, text="Wind Direction: ", font=("Calibria", 15))
-windSpeedLabel = customtkinter.CTkLabel(root, text="Wind Speed: ", font=("Calibria", 15))
+temperatureLabel = customtkinter.CTkLabel(root,
+	text="Temperature: ", font=("Inter", 15), anchor="w")
+humidityLabel = customtkinter.CTkLabel(root,
+	text="Humidity:    ", font=("Inter", 15), anchor="w")
+pressureLabel = customtkinter.CTkLabel(root,
+	text="Pressure:    ", font=("Inter", 15), anchor="w")
+uvLabel = customtkinter.CTkLabel(root,
+	text="UV:             ", font=("Inter", 15), anchor="w")
+windDirectionLabel = customtkinter.CTkLabel(root,
+	text="Wind Direction: ", font=("Inter", 15), anchor="w")
+windSpeedLabel = customtkinter.CTkLabel(root,
+	text="Wind Speed:     ", font=("Inter", 15), anchor="w")
 
 logger.info("Creating Labels...")
 
@@ -70,7 +76,7 @@ logger.info("Creating Labels...")
 logo = customtkinter.CTkImage(dark_image=Image.open("assets/logo.png"), size=(400, 300))
 logoLabel = customtkinter.CTkLabel(root, text="", image=logo)
 logoLabel.image = logo
-weatherStationLabel = customtkinter.CTkLabel(root, text="Weather Station GUI", font=("Calibria", 25))
+weatherStationLabel = customtkinter.CTkLabel(root, text="Weather Station GUI", font=("Inter", 25))
 
 logging.info("Creating Image...")
 

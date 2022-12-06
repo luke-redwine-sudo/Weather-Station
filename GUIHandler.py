@@ -93,8 +93,8 @@ class GUIHandler:
 			humidity = self.BME280Handler.readHumidity()
 			pressure = self.BME280Handler.readPressure()
 			self.temperatureLabel.configure(text="Temperature: {0:0=2d}F".format(temperature))
-			self.humidityLabel.configure(text="Humidity: {0:0=2d}%".format(humidity))
-			self.pressureLabel.configure(text="Pressure: {0:0=2d} Pa".format(pressure))
+			self.humidityLabel.configure(text="Humidity:    {0:0=2d}%".format(humidity))
+			self.pressureLabel.configure(text="Pressure:    {0:0=2d} Pa".format(pressure))
 		
 		return temperature, humidity, pressure
 
@@ -106,7 +106,7 @@ class GUIHandler:
 		# Poll the UV sensor if it is initialized
 		if (self.UVSensorHandler.initialized):
 			UV = self.UVSensorHandler.readUV()
-			self.uvLabel.configure(text="UV: {0:0=1d}".format(UV))
+			self.uvLabel.configure(text="UV:             {0:0=1d}".format(UV))
 		
 		return UV
 		
@@ -121,7 +121,7 @@ class GUIHandler:
 			windDirection = self.WindSensorHandler.readWindDirection()
 			windSpeed = self.WindSensorHandler.readWindSpeed()
 			self.windDirectionLabel.configure(text="Wind Direction: {0:0=3d}".format(windDirection))
-			self.windSpeedLabel.configure(text="Wind Speed: {0:0=2d} mph".format(windSpeed))
+			self.windSpeedLabel.configure(text="Wind Speed:     {0:0=2d} mph".format(windSpeed))
 			
 		return windDirection, windSpeed
 		
