@@ -67,7 +67,7 @@ windSpeedLabel = customtkinter.CTkLabel(root, text="Wind Speed: ", font=("Calibr
 logger.info("Creating Labels...")
 
 # Create Image
-logo = ImageTk.PhotoImage(file="assets/logo.png")
+logo = customtkinter.CTkImage(dark_image=Image.open("assets/logo.png"), size=(400, 300))
 logoLabel = customtkinter.CTkLabel(root, text="", image=logo)
 logoLabel.image = logo
 weatherStationLabel = customtkinter.CTkLabel(root, text="Weather Station GUI", font=("Calibria", 25))

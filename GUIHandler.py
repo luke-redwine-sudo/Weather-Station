@@ -8,7 +8,7 @@ import BME280Handler
 import UVSensorHandler
 import WindSensorHandler
 import DataStorageHandler
-import GroundStationHandler
+from GroundStation import GroundStationHandler
 import WeatherStationProperties
 
 properties = WeatherStationProperties.WeatherStationProperties()
