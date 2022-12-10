@@ -1,4 +1,6 @@
 from random import randint
+import board
+import adafruit_bme280.basic as adafruit_bme280
 import logging
 import sys
 
@@ -11,6 +13,9 @@ class BME280Handler:
 	def __init__(self):
 		# Initialize self variables
 		self.initialized = False
+		self.bme280Address = 0x76
+		self.i2c = None
+		self.sensor = None
 		
 		# Initialize logger
 		logging.basicConfig(filename=str(properties.getLoggingFolder()) + "BME280Handler.log", disable_existing_loggers=False, format='%(asctime)s %(module)s %(levelname)s - %(message)s', filemode='w')
@@ -24,13 +29,18 @@ class BME280Handler:
 		
 		# Initialize BME280 if it has not been initialized
 		if (self.initialized == False):
-			self.initialized = True
-			
+			try:
+				self.i2c = board.I2C()
+				self.sensor = adafruit_bme280.Adafruit_BME280_I2C(self.i2c, address=self.bme280Address)
+				self.initialized = True
+			except:
+				self.logger.error("Sensor could not be contacted")
+	
 	def readTemperature(self):
 				
 		# Read the temperature from the sensor if it is initialized
 		if (self.initialized == True):
-			return randint(0,100)
+			return self.celsiusToFahrenheit(self.sensor.temperature)
 
 		return 0
 		
@@ -38,7 +48,7 @@ class BME280Handler:
 		
 		# Read the humidity from the sensor if it is initialized
 		if (self.initialized == True):
-			return randint(0,100)
+			return self.sensor.humidity
 
 		return 0
 	
@@ -46,10 +56,14 @@ class BME280Handler:
 		
 		# Read the pressure from the sensor if it is initialized
 		if (self.initialized == True):
-			return randint(0,100)
+			return self.sensor.pressure
 
 		return 0
-		
+	
+	def celsiusToFahrenheit(self, celsiusTemperature):
+		fahrenheitTemperature = (celsiusTemperature * 1.8) + 32.0
+		return fahrenheitTemperature
+	
 	def shutdown(self):
 		self.logger.info("Shutdown BME280 Handler...")
 		

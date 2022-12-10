@@ -92,9 +92,15 @@ class GUIHandler:
 			temperature = self.BME280Handler.readTemperature()
 			humidity = self.BME280Handler.readHumidity()
 			pressure = self.BME280Handler.readPressure()
-			self.temperatureLabel.configure(text="Temperature: {0:0=2d}F".format(temperature))
-			self.humidityLabel.configure(text="Humidity:    {0:0=2d}%".format(humidity))
-			self.pressureLabel.configure(text="Pressure:    {0:0=2d} Pa".format(pressure))
+		else:
+			self.BME280Handler = BME280Handler.BME280Handler()
+			temperature = 0.0
+			humidity = 0.0
+			pressure = 0.0
+		
+		self.temperatureLabel.configure(text="Temperature: %.1f F" % temperature)
+		self.humidityLabel.configure(text="Humidity:       %.1f" % humidity + "%")
+		self.pressureLabel.configure(text="Pressure:       %.1f Pa" % pressure)
 		
 		return temperature, humidity, pressure
 
@@ -106,7 +112,7 @@ class GUIHandler:
 		# Poll the UV sensor if it is initialized
 		if (self.UVSensorHandler.initialized):
 			UV = self.UVSensorHandler.readUV()
-			self.uvLabel.configure(text="UV:             {0:0=1d}".format(UV))
+			self.uvLabel.configure(text="UV:                   %.1f" % UV)
 		
 		return UV
 		
@@ -120,8 +126,8 @@ class GUIHandler:
 		if (self.WindSensorHandler.initialized):
 			windDirection = self.WindSensorHandler.readWindDirection()
 			windSpeed = self.WindSensorHandler.readWindSpeed()
-			self.windDirectionLabel.configure(text="Wind Direction: {0:0=3d}".format(windDirection))
-			self.windSpeedLabel.configure(text="Wind Speed:     {0:0=2d} mph".format(windSpeed))
+			self.windDirectionLabel.configure(text="Wind Direction: %.1f" % windDirection)
+			self.windSpeedLabel.configure(text="Wind Speed:     %.1f mph" % windSpeed)
 			
 		return windDirection, windSpeed
 		
