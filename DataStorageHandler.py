@@ -19,24 +19,33 @@ class DataStorageHandler:
 		
 		self.logger.info("Initializing Data Storage Handler...")
 		
-		self.folder = str(properties.getDataFolder())
-		self.max_csv_number = 1
+		self.initialized = False
 		
-		if (os.path.isdir(self.folder)):
-			dir_list = os.listdir(self.folder)
+		
+	def initializeDataStorage(self):
+		
+		if (self.initialized == False):
+			self.folder = str(properties.getDataFolder())
+			self.max_csv_number = 1
 			
-			for f in dir_list:
-				self.logger.info(f)
-				if (str(properties.getDataFilePrefix()) in f and int(f.split("_")[1].split(".")[0]) >= self.max_csv_number):
-					self.logger.info("Increasing Log Level...")
-					self.max_csv_number = int(f.split("_")[1].split(".")[0]) + 1
+			if (os.path.isdir(self.folder)):
+				dir_list = os.listdir(self.folder)
+				
+				for f in dir_list:
+					self.logger.info(f)
+					if (str(properties.getDataFilePrefix()) in f and int(f.split("_")[1].split(".")[0]) >= self.max_csv_number):
+						self.logger.info("Increasing Log Level...")
+						self.max_csv_number = int(f.split("_")[1].split(".")[0]) + 1
+				
+			else:
+				os.makedirs(self.folder)
 			
-		else:
-			os.makedirs(self.folder)
-		
-		self.filename = self.folder + str(properties.getDataFilePrefix()) + "_{0:0=2d}".format(self.max_csv_number) + ".csv"
-		self.dataframe = pd.DataFrame(columns=self.columns)
-		
+			self.filename = self.folder + str(properties.getDataFilePrefix()) + "_{0:0=2d}".format(self.max_csv_number) + ".csv"
+			self.dataframe = pd.DataFrame(columns=self.columns)
+			
+			self.initialized = True
+	
+	
 	def isDataFrameOversized(self):
 		if ((self.dataframe.memory_usage(deep=True).sum() / 1000000) > float(properties.getDataFileSize())):
 			return True
@@ -58,3 +67,11 @@ class DataStorageHandler:
 	
 	def writeToCsv(self):
 		self.dataframe.to_csv(self.filename)
+
+	def shutdown(self):
+		
+		self.logger.info("Shutdown Data Storage Handler...")
+		
+		if (self.initialized == True):
+			self.writeToCsv()
+			

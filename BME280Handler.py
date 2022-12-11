@@ -40,7 +40,7 @@ class BME280Handler:
 				
 		# Read the temperature from the sensor if it is initialized
 		if (self.initialized == True):
-			return self.celsiusToFahrenheit(self.sensor.temperature)
+			return round(self.celsiusToFahrenheit(self.sensor.temperature),1)
 
 		return 0
 		
@@ -48,7 +48,7 @@ class BME280Handler:
 		
 		# Read the humidity from the sensor if it is initialized
 		if (self.initialized == True):
-			return self.sensor.humidity
+			return round(self.sensor.humidity,1)
 
 		return 0
 	
@@ -56,7 +56,7 @@ class BME280Handler:
 		
 		# Read the pressure from the sensor if it is initialized
 		if (self.initialized == True):
-			return self.sensor.pressure
+			return round(self.sensor.pressure,1)
 
 		return 0
 	

@@ -5,6 +5,8 @@ from PIL import ImageTk, Image
 import GUIHandler
 import logging
 import sys
+import time
+import math
 import WeatherStationProperties
 
 properties = WeatherStationProperties.WeatherStationProperties()

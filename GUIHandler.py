@@ -8,7 +8,8 @@ import BME280Handler
 import UVSensorHandler
 import WindSensorHandler
 import DataStorageHandler
-from GroundStation import GroundStationHandler
+import SerialConnectionHandler
+import GroundStationHandler
 import WeatherStationProperties
 
 properties = WeatherStationProperties.WeatherStationProperties()
@@ -29,15 +30,6 @@ class GUIHandler:
 		self.collectData = False
 		self.isRotation = False
 		
-		# Initialize sensor Handlers
-		self.BME280Handler = BME280Handler.BME280Handler()
-		self.UVSensorHandler = UVSensorHandler.UVSensorHandler()
-		self.WindSensorHandler = WindSensorHandler.WindSensorHandler()
-		self.GroundStationHandler = GroundStationHandler.GroundStationHandler()
-		
-		# Initialize Data Handler
-		self.DataStorageHandler = DataStorageHandler.DataStorageHandler()
-		
 		# Initialize logger
 		logging.basicConfig(filename=str(properties.getLoggingFolder()) + "GUIHandler.log", disable_existing_loggers=False, format='%(asctime)s %(module)s %(levelname)s - %(message)s', filemode='w')
 		self.logger = logging.getLogger(__name__)
@@ -45,10 +37,24 @@ class GUIHandler:
 		
 		self.logger.info("Initializing GUI Handler...")
 		
+		# Initialize Serial Communications Handler
+		self.SerialConnectionHandler = SerialConnectionHandler.SerialConnectionHandler()
+		
+		# Initialize sensor Handlers
+		self.BME280Handler = BME280Handler.BME280Handler()
+		self.UVSensorHandler = UVSensorHandler.UVSensorHandler(self.SerialConnectionHandler)
+		self.WindSensorHandler = WindSensorHandler.WindSensorHandler(self.SerialConnectionHandler)
+		self.GroundStationHandler = GroundStationHandler.GroundStationHandler()
+		
+		# Initialize Data Handler
+		self.DataStorageHandler = DataStorageHandler.DataStorageHandler()
+		
+		
 	def startDataCollection(self):
 		# Initialize Sensors
 		self.logger.info("Starting Data Collection...")
 		self.setCollectData(True)
+		self.SerialConnectionHandler.initializeSerialConnection()
 		self.BME280Handler.initializeBME()
 		self.UVSensorHandler.initializeUV()
 		self.WindSensorHandler.initializeWindSensor()
@@ -69,12 +75,12 @@ class GUIHandler:
 			windDirection, windSpeed = self.updateWindSensor()
 			self.DataStorageHandler.write(temperature, humidity, pressure, UV, windDirection, windSpeed)
 			
-		
 		self.root.after(properties.getCollectionFrequency(), self.update)
 		
 	def setCollectData(self, collect):
 		# Set collect data
 		self.collectData = collect
+		self.DataStorageHandler.initializeDataStorage()
 		
 	def getCollectData(self):
 		# Return the current collection status
@@ -126,7 +132,7 @@ class GUIHandler:
 		if (self.WindSensorHandler.initialized):
 			windDirection = self.WindSensorHandler.readWindDirection()
 			windSpeed = self.WindSensorHandler.readWindSpeed()
-			self.windDirectionLabel.configure(text="Wind Direction: %.1f" % windDirection)
+			self.windDirectionLabel.configure(text="Wind Direction: " + str(windDirection))
 			self.windSpeedLabel.configure(text="Wind Speed:     %.1f mph" % windSpeed)
 			
 		return windDirection, windSpeed
@@ -155,8 +161,11 @@ class GUIHandler:
 		self.UVSensorHandler.shutdown()
 		self.WindSensorHandler.shutdown()
 		self.GroundStationHandler.shutdown()
+		self.SerialConnectionHandler.shutdown()
 		
 		if (self.DataStorageHandler != None):
 			self.DataStorageHandler.writeToCsv()
+		
+		self.DataStorageHandler.shutdown()
 		
 		self.root.quit()
