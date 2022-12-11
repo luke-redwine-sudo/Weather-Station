@@ -14,6 +14,8 @@ int VaneValue;
 int Direction;
 int LastValue;
 
+boolean Rotate = false;
+
 uint8_t stepPinOut = HIGH;
 
 unsigned long delayInterval = 0;
@@ -40,22 +42,25 @@ void setup() {
 
 void loop() {
 
-  if ((millis() - delayInterval) >= 300)
+  if (Rotate)
   {
-    if (stepPinOut == HIGH)
+    if ((millis() - delayInterval) >= 300)
     {
-      stepPinOut = LOW;
+      if (stepPinOut == HIGH)
+      {
+        stepPinOut = LOW;
+      }
+      else
+      {
+        stepPinOut = HIGH;
+      }
+  
+      delayInterval = millis();
+  
+      digitalWrite(stepPin, stepPinOut);
     }
-    else
-    {
-      stepPinOut = HIGH;
-    }
-
-    delayInterval = millis();
-
-    digitalWrite(stepPin, stepPinOut);
   }
-
+  
   VaneValue = analogRead(windVaneIn);
 
    // Only update the display if change greater than 2 degrees.
@@ -80,6 +85,14 @@ void loop() {
     else if ((request) == "68")
     {
       Serial.write(Direction&0xFF);
+    }
+    else if ((request) == "65")
+    {
+      Rotate = true;
+    }
+    else if ((request) == "79")
+    {
+      Rotate = false;
     }
     
   }

@@ -44,7 +44,7 @@ class GUIHandler:
 		self.BME280Handler = BME280Handler.BME280Handler()
 		self.UVSensorHandler = UVSensorHandler.UVSensorHandler(self.SerialConnectionHandler)
 		self.WindSensorHandler = WindSensorHandler.WindSensorHandler(self.SerialConnectionHandler)
-		self.GroundStationHandler = GroundStationHandler.GroundStationHandler()
+		self.GroundStationHandler = GroundStationHandler.GroundStationHandler(self.SerialConnectionHandler)
 		
 		# Initialize Data Handler
 		self.DataStorageHandler = DataStorageHandler.DataStorageHandler()
@@ -58,6 +58,7 @@ class GUIHandler:
 		self.BME280Handler.initializeBME()
 		self.UVSensorHandler.initializeUV()
 		self.WindSensorHandler.initializeWindSensor()
+		self.GroundStationHandler.initializeGroundStation()
 		
 	def endDataCollection(self):
 		# Shutdown sensors
