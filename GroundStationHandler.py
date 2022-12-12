@@ -15,7 +15,7 @@ class GroundStationHandler:
 		
 		self.logger.info("Initializing Ground Station Handler...")
 		
-		self.SerialConnection = SerialConnectionHandler
+		self.serialConnection = SerialConnectionHandler
 		self.initialized = False
 		
 	def initializeGroundStation(self):

@@ -25,49 +25,39 @@ String request = "";
 uint8_t response;
 
 void setup() {
-
-  // initialize serial communication at 9600 bits per second:
-  Serial.begin(9600);
-
   // Declare pins as output:
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
+  
   pinMode(UVin, INPUT);
 
   // Set the spinning direction counterclockwise:
-  digitalWrite(dirPin, LOW);
+  digitalWrite(dirPin, HIGH);
 
-  delayInterval = millis();
+  delayInterval = micros();
+
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
 }
 
 void loop() {
 
   if (Rotate)
   {
-    if ((millis() - delayInterval) >= 300)
+    if ((micros() - delayInterval) >= 300)
     {
       if (stepPinOut == HIGH)
       {
         stepPinOut = LOW;
+        digitalWrite(stepPin, LOW);
       }
       else
       {
         stepPinOut = HIGH;
+        digitalWrite(stepPin, HIGH);
       }
-  
-      delayInterval = millis();
-  
-      digitalWrite(stepPin, stepPinOut);
+      delayInterval = micros();
     }
-  }
-  
-  VaneValue = analogRead(windVaneIn);
-
-   // Only update the display if change greater than 2 degrees.
-  if(abs(VaneValue - LastValue) > 8)
-  {
-    Direction = getHeading(VaneValue);
-    LastValue = VaneValue;
   }
 
   if (Serial.available() > 0)
@@ -84,6 +74,15 @@ void loop() {
     }
     else if ((request) == "68")
     {
+      VaneValue = analogRead(windVaneIn);
+
+      // Only update the display if change greater than 2 degrees.
+      if(abs(VaneValue - LastValue) > 8)
+      {
+        Direction = getHeading(VaneValue);
+        LastValue = VaneValue;
+      }
+      
       Serial.write(Direction&0xFF);
     }
     else if ((request) == "65")
